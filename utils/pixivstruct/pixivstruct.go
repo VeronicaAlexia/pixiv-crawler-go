@@ -140,6 +140,7 @@ type IllustResponse struct {
 }
 
 type IllustComments struct {
+	Error         Error     `json:"error"`
 	TotalComments uint64    `json:"total_comments"`
 	Comments      []Comment `json:"comments"`
 	NextURL       string    `json:"next_url"`
@@ -155,6 +156,7 @@ type Comment struct {
 }
 
 type IllustCommentAddResult struct {
+	Error   Error   `json:"error"`
 	Comment Comment `json:"comment"`
 }
 

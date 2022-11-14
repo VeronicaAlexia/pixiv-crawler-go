@@ -112,45 +112,24 @@ func (a *AppPixivAPI) IllustDetail(id string) (*pixivstruct.Illust, error) {
 	return &response.Illust, nil
 }
 
-type illustCommentsParams struct {
-	IllustID             int  `url:"illust_id,omitemtpy"`
-	Offset               int  `url:"offset,omitempty"`
-	IncludeTotalComments bool `url:"include_total_comments,omitempty"`
-}
-
 // IllustComments Comments posted in a pixiv artwork
-func (a *AppPixivAPI) IllustComments(illustID int, offset int, includeTotalComments bool) (*pixivstruct.IllustComments, error) {
-	data := &pixivstruct.IllustComments{}
-	params := &illustCommentsParams{
-		IllustID:             illustID,
-		IncludeTotalComments: includeTotalComments,
-		Offset:               offset,
+func (a *AppPixivAPI) IllustComments(illustID int, next_url string) (*pixivstruct.IllustComments, error) {
+	params := map[string]string{"illust_id": strconv.Itoa(illustID), "offset": "0", "include_total_comments": "true"}
+	response := request.Get(NextUrl(next_url, COMMENTS, params)).Json(&pixivstruct.IllustComments{}).(*pixivstruct.IllustComments)
+	if response.Error.Message != "" {
+		return nil, errors.New(response.Error.Message)
 	}
-
-	if err := a.request(COMMENTS, params, data, true); err != nil {
-		return nil, err
-	}
-	return data, nil
-}
-
-type illustCommentAddParams struct {
-	IllustID        uint64 `url:"illust_id,omitempty"`
-	Comment         string `url:"comment,omitempty"`
-	ParentCommentID int    `url:"parent_comment_id,omitempty"`
+	return response, nil
 }
 
 // IllustCommentAdd adds a comment to given illustID
-func (a *AppPixivAPI) IllustCommentAdd(illustID uint64, comment string, parentCommentID int) (*pixivstruct.IllustCommentAddResult, error) {
-	data := &pixivstruct.IllustCommentAddResult{}
-	params := &illustCommentAddParams{
-		IllustID:        illustID,
-		Comment:         comment,
-		ParentCommentID: parentCommentID,
+func (a *AppPixivAPI) IllustCommentAdd(illustID int, comment string, parentCommentID int) (*pixivstruct.IllustCommentAddResult, error) {
+	params := map[string]string{"illust_id": strconv.Itoa(illustID), "comment": comment, "parent_comment_id": strconv.Itoa(parentCommentID)}
+	response := request.Post(API_BASE+ADD, params).Json(&pixivstruct.IllustCommentAddResult{}).(*pixivstruct.IllustCommentAddResult)
+	if response.Error.Message != "" {
+		return nil, errors.New(response.Error.Message)
 	}
-	if err := a.post(ADD, params, data, true); err != nil {
-		return nil, err
-	}
-	return data, nil
+	return response, nil
 }
 
 // IllustRelated returns Related works
