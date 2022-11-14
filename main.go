@@ -51,7 +51,7 @@ func command_line_shell(c *cli.Context) error {
 		app.DownloaderSingly(arguments.CommandLines.IllustID)
 
 	} else if arguments.CommandLines.AuthorID != 0 {
-		app.ShellAuthor(arguments.CommandLines.AuthorID, 0)
+		app.ShellAuthor("", arguments.CommandLines.AuthorID)
 
 	} else if arguments.CommandLines.URL != "" {
 		app.DownloaderSingly(utils.GetInt(arguments.CommandLines.URL))

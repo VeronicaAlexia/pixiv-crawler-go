@@ -54,7 +54,7 @@ func GET_USER_FOLLOWING(UserID int) {
 	}
 	fmt.Println("一共", len(following.UserPreviews), "个关注的用户")
 	for _, user := range following.UserPreviews {
-		ShellAuthor(user.User.ID, 0)
+		ShellAuthor("", user.User.ID)
 	}
 	// 刷新屏幕
 }
@@ -95,12 +95,11 @@ func ShellRecommend(next_url string, auth bool) {
 	}
 }
 
-func ShellAuthor(author_id int, page int) {
-	illusts, next, err := App.UserIllusts(author_id, "illust", page)
-	if err == nil {
-		download.DownloadTask(illusts, true)
-		if err == nil && next != 0 { // If there is a next page, continue to request
-			ShellAuthor(author_id, next)
+func ShellAuthor(next_url string, author_id int) {
+	if illusts, err := App.UserIllusts(author_id, next_url); err == nil {
+		download.DownloadTask(illusts.Illusts, true)
+		if illusts.NextURL != "" { // If there is a next page, continue to request
+			ShellAuthor(illusts.NextURL, author_id)
 		}
 	} else {
 		fmt.Println("Request author info fail,please check network", err)

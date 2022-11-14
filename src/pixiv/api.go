@@ -73,19 +73,23 @@ func (a *AppPixivAPI) UserDetail(uid int) (*pixivstruct.UserDetail, error) {
 }
 
 // UserIllusts type: [illust, manga]
-func (a *AppPixivAPI) UserIllusts(uid int, _type string, offset int) ([]pixivstruct.Illust, int, error) {
+func (a *AppPixivAPI) UserIllusts(uid int, next_url string) (*pixivstruct.IllustsResponse, error) {
 	params := map[string]string{
 		"user_id": strconv.Itoa(uid),
 		"filter":  "for_ios",
-		"type":    _type,
-		"offset":  strconv.Itoa(offset),
+		"type":    "illust",
+		"offset":  "0",
 	}
-	response := request.Get(API_BASE+USER_AUTHOR, params).Json(&pixivstruct.IllustsResponse{}).(*pixivstruct.IllustsResponse)
+	if next_url == "" {
+		next_url = API_BASE + USER_AUTHOR
+	} else {
+		params = nil
+	}
+	response := request.Get(next_url, params).Json(&pixivstruct.IllustsResponse{}).(*pixivstruct.IllustsResponse)
 	if response.Error.Message != "" {
-		return nil, 0, errors.New(response.Error.Message)
+		return nil, errors.New(response.Error.Message)
 	}
-	next, err := parseNextPageOffset(response.NextURL)
-	return response.Illusts, next, err
+	return response, nil
 }
 
 // UserBookmarksIllust restrict: [public, private]
@@ -104,20 +108,14 @@ func (a *AppPixivAPI) UserBookmarksIllust(uid int, next_url string) (*pixivstruc
 	}
 }
 
-type illustFollowParams struct {
-	Restrict string `url:"restrict,omitempty"`
-	Offset   int    `url:"offset,omitempty"`
-}
-
 // IllustFollow restrict: [public, private]
-func (a *AppPixivAPI) IllustFollow(restrict string, offset int) ([]pixivstruct.Illust, int, error) {
-	params := &illustFollowParams{Restrict: restrict, Offset: offset}
-	data := &pixivstruct.IllustsResponse{}
-	if err := a.request(FOLLOW, params, data, true); err != nil {
-		return nil, 0, err
+func (a *AppPixivAPI) IllustFollow(restrict string, offset int) ([]pixivstruct.Illust, error) {
+	params := map[string]string{"restrict": restrict, "offset": strconv.Itoa(offset)}
+	response := request.Get(API_BASE+FOLLOW, params).Json(&pixivstruct.IllustsResponse{}).(*pixivstruct.IllustsResponse)
+	if response.Error.Message != "" {
+		return nil, errors.New(response.Error.Message)
 	}
-	next, err := parseNextPageOffset(data.NextURL)
-	return data.Illusts, next, err
+	return response.Illusts, nil
 }
 
 func (a *AppPixivAPI) IllustDetail(id string) (*pixivstruct.Illust, error) {
