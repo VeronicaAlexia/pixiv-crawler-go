@@ -346,27 +346,24 @@ func (a *AppPixivAPI) UserFollower(userID int, restrict string, offset int) (*pi
 	return userFollowStats("follower", userID, restrict, offset)
 }
 
-type userFollowPostParams struct {
-	UserID   uint64 `url:"user_id,omitempty"`
-	Restrict string `url:"restrict,omitempty"`
-}
-
-func userFollowPost(a *AppPixivAPI, urlEnd string, userID uint64, restrict string) error {
-	params := userFollowPostParams{
-		UserID:   userID,
-		Restrict: restrict,
+func userFollowPost(urlEnd string, userID int, restrict string) error {
+	params := map[string]string{"user_id": strconv.Itoa(userID), "restrict": restrict}
+	response := request.Post(API_BASE+USER_FOLLOW+urlEnd, params).Content()
+	if response == nil {
+		return errors.New("the user is already followed")
+	} else {
+		return nil
 	}
-	return a.post(USER_FOLLOW+urlEnd, params, nil, true)
 }
 
 // UserFollowAdd Follow users
-func (a *AppPixivAPI) UserFollowAdd(userID uint64, restrict string) error {
-	return userFollowPost(a, "add", userID, restrict)
+func (a *AppPixivAPI) UserFollowAdd(userID int, restrict string) error {
+	return userFollowPost("add", userID, restrict)
 }
 
 // UserFollowDelete Unfollow users
-func (a *AppPixivAPI) UserFollowDelete(userID uint64, restrict string) error {
-	return userFollowPost(a, "delete", userID, restrict)
+func (a *AppPixivAPI) UserFollowDelete(userID int, restrict string) error {
+	return userFollowPost("delete", userID, restrict)
 }
 
 type userMyPixivParams struct {
@@ -407,28 +404,26 @@ func (a *AppPixivAPI) UserList(userID uint64, filter string, offset int) (*pixiv
 	return data, nil
 }
 
-type ugoiraMetadataParams struct {
-	IllustID uint64 `url:"illust_id,omitempty"`
-}
-
 // UgoiraMetadata Ugoira Info
-func (a *AppPixivAPI) UgoiraMetadata(illustID uint64) (*pixivstruct.UgoiraMetadata, error) {
-	data := &pixivstruct.UgoiraMetadata{}
-	params := &ugoiraMetadataParams{IllustID: illustID}
-	if err := a.request(METADATA, params, data, true); err != nil {
-		return nil, err
+func (a *AppPixivAPI) UgoiraMetadata(illustID int) (*pixivstruct.UgoiraMetadata, error) {
+	params := map[string]string{"illust_id": strconv.Itoa(illustID)}
+	response := request.Get(API_BASE+METADATA, params).Json(&pixivstruct.UgoiraMetadata{}).(*pixivstruct.UgoiraMetadata)
+	if response.Error.Message != "" {
+		return nil, errors.New(response.Error.Message)
 	}
-	return data, nil
+	return response, nil
 }
 
 // ShowcaseArticle Special feature details (disguised as Chrome)
 func (a *AppPixivAPI) ShowcaseArticle(showcaseID string) (*pixivstruct.ShowcaseArticle, error) {
 	params := map[string]string{"article_id": showcaseID}
-	headers := map[string]string{
-		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36",
-		"Referer":    WEB_BASE,
-	}
-	response := request.Get(WEB_BASE+"/"+WEB_ARTICLE, params, headers).Json(&pixivstruct.ShowcaseArticle{}).(*pixivstruct.ShowcaseArticle)
+	response := request.Get(
+		WEB_BASE+"/"+WEB_ARTICLE,
+		params, map[string]string{
+			"Referer":    WEB_BASE,
+			"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36",
+		},
+	).Json(&pixivstruct.ShowcaseArticle{}).(*pixivstruct.ShowcaseArticle)
 	if response.Message != "" {
 		return nil, errors.New(response.Message)
 	}

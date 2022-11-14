@@ -224,6 +224,7 @@ type UserList struct {
 }
 
 type UgoiraMetadata struct {
+	Error                        Error               `json:"error"`
 	UgoiraMetadataUgoiraMetadata UgoiraMetadataClass `json:"ugoira_metadata"`
 }
 
