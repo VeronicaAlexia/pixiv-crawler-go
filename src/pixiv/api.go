@@ -85,12 +85,7 @@ func (a *AppPixivAPI) UserIllusts(uid int, next_url string) (*pixivstruct.Illust
 // UserBookmarksIllust restrict: [public, private]
 func (a *AppPixivAPI) UserBookmarksIllust(uid int, next_url string) (*pixivstruct.IllustsResponse, error) {
 	params := map[string]string{"user_id": strconv.Itoa(uid), "restrict": "public"}
-	if next_url == "" {
-		next_url = API_BASE + BOOKMARKS
-	} else {
-		params = nil
-	}
-	response := request.Get(next_url, params).Json(&pixivstruct.IllustsResponse{}).(*pixivstruct.IllustsResponse)
+	response := request.Get(NextUrl(next_url, BOOKMARKS, params)).Json(&pixivstruct.IllustsResponse{}).(*pixivstruct.IllustsResponse)
 	if response.Error.Message != "" {
 		return nil, errors.New(response.Error.Message)
 	} else {
@@ -426,23 +421,16 @@ func (a *AppPixivAPI) UgoiraMetadata(illustID uint64) (*pixivstruct.UgoiraMetada
 	return data, nil
 }
 
-type showcaseArticleParams struct {
-	ShowcaseID string `url:"article_id,omitempty"`
-}
-
 // ShowcaseArticle Special feature details (disguised as Chrome)
 func (a *AppPixivAPI) ShowcaseArticle(showcaseID string) (*pixivstruct.ShowcaseArticle, error) {
-	data := &pixivstruct.ShowcaseArticle{}
-	params := &showcaseArticleParams{
-		ShowcaseID: showcaseID,
+	params := map[string]string{"article_id": showcaseID}
+	headers := map[string]string{
+		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36",
+		"Referer":    WEB_BASE,
 	}
-
-	s := a.sling.New().Base(WEB_BASE + "/")
-	s.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36")
-	s.Set("Referer", WEB_BASE)
-
-	if _, err := s.Get(WEB_ARTICLE).QueryStruct(params).ReceiveSuccess(data); err != nil {
-		return nil, err
+	response := request.Get(WEB_BASE+"/"+WEB_ARTICLE, params, headers).Json(&pixivstruct.ShowcaseArticle{}).(*pixivstruct.ShowcaseArticle)
+	if response.Message != "" {
+		return nil, errors.New(response.Message)
 	}
-	return data, nil
+	return response, nil
 }
