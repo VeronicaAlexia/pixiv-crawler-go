@@ -43,25 +43,6 @@ func (a *AppPixivAPI) request(path string, params, data interface{}, auth bool) 
 	return err
 }
 
-func (a *AppPixivAPI) WithDownloadTimeout(timeout time.Duration) *AppPixivAPI {
-	a.timeout = timeout
-	return a
-}
-
-func (a *AppPixivAPI) WithDownloadProxy(proxy *url.URL) *AppPixivAPI {
-	a.proxy = proxy
-	return a
-}
-
-func (a *AppPixivAPI) post(path string, params, data interface{}, auth bool) (err error) {
-	if auth {
-		_, err = a.sling.New().Post(path).Set("Authorization", "Bearer "+config.Vars.PixivToken).BodyForm(params).ReceiveSuccess(data)
-	} else {
-		_, err = a.sling.New().Post(path).BodyForm(params).ReceiveSuccess(data)
-	}
-	return err
-}
-
 func (a *AppPixivAPI) UserDetail(uid int) (*pixivstruct.UserDetail, error) {
 	params := map[string]string{"user_id": strconv.Itoa(uid), "filter": "for_ios"}
 	response := request.Get(API_BASE+USER_DETAIL, params).Json(&pixivstruct.UserDetail{}).(*pixivstruct.UserDetail)
