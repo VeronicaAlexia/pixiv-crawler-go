@@ -153,30 +153,20 @@ func (a *AppPixivAPI) IllustCommentAdd(illustID uint64, comment string, parentCo
 	return data, nil
 }
 
-type illustRelatedParams struct {
-	IllustID      uint64   `url:"illust_id,omitempty"`
-	Filter        string   `url:"filter,omitempty"`
-	SeedIllustIDs []string `url:"seed_illust_ids[],omitempty,omitempty"`
-}
-
 // IllustRelated returns Related works
-func (a *AppPixivAPI) IllustRelated(illustID uint64, filter string, seedIllustIDs []string) (*pixivstruct.IllustsResponse, error) {
-	data := &pixivstruct.IllustsResponse{}
+func (a *AppPixivAPI) IllustRelated(illustID int, filter string, seedIllustIDs []string) (*pixivstruct.IllustsResponse, error) {
+	params := map[string]string{"illust_id": strconv.Itoa(illustID)}
 	if filter == "" {
-		filter = "for_ios"
-	}
-	params := &illustRelatedParams{
-		IllustID: illustID,
-		Filter:   filter,
+		params["filter"] = "for_ios"
 	}
 	if seedIllustIDs != nil {
-		params.SeedIllustIDs = seedIllustIDs
+		params["seed_illust_ids"] = "[" + strings.Join(seedIllustIDs, ",") + "]"
 	}
-
-	if err := a.request(RELATED, params, data, true); err != nil {
-		return nil, err
+	response := request.Post(API_BASE+RELATED, params).Json(&pixivstruct.IllustsResponse{}).(*pixivstruct.IllustsResponse)
+	if response.Error.Message != "" {
+		return nil, errors.New(response.Error.Message)
 	}
-	return data, nil
+	return response, nil
 }
 
 // IllustRecommended Home Recommendation
@@ -211,20 +201,14 @@ func (a *AppPixivAPI) IllustRanking(mode string) (*pixivstruct.IllustsResponse, 
 	return response, nil
 }
 
-type trendingTagsIllustParams struct {
-	Filter string `url:"filter,omitempty"`
-}
-
 // TrendingTagsIllust Trend label
 func (a *AppPixivAPI) TrendingTagsIllust(filter string) (*pixivstruct.TrendingTagsIllust, error) {
-	data := &pixivstruct.TrendingTagsIllust{}
-	params := &trendingTagsIllustParams{
-		Filter: filter,
+	params := map[string]string{"filter": filter}
+	response := request.Get(API_BASE+TRENDING_TAGS, params).Json(&pixivstruct.TrendingTagsIllust{}).(*pixivstruct.TrendingTagsIllust)
+	if response.Error.Message != "" {
+		return nil, errors.New(response.Error.Message)
 	}
-	if err := a.request(TRENDING_TAGS, params, data, true); err != nil {
-		return nil, err
-	}
-	return data, nil
+	return response, nil
 }
 
 type searchIllustParams struct {
@@ -265,9 +249,8 @@ func (a *AppPixivAPI) SearchIllust(word string, searchTarget string, sort string
 
 // IllustBookmarkDetail Bookmark details
 func (a *AppPixivAPI) IllustBookmarkDetail(illustID int) (*pixivstruct.IllustBookmarkDetail, error) {
-	response := request.Get(
-		API_BASE+BOOKMARK_DETAIL, map[string]string{"illust_id": strconv.Itoa(illustID)},
-	).Json(&pixivstruct.IllustBookmarkDetail{}).(*pixivstruct.IllustBookmarkDetail)
+	params := map[string]string{"illust_id": strconv.Itoa(illustID)}
+	response := request.Get(API_BASE+BOOKMARK_DETAIL, params).Json(&pixivstruct.IllustBookmarkDetail{}).(*pixivstruct.IllustBookmarkDetail)
 	if response.Error.Message != "" {
 		return nil, errors.New(response.Error.Message)
 	}

@@ -171,6 +171,7 @@ type PrivacyPolicy struct {
 }
 
 type TrendingTagsIllust struct {
+	Error     Error      `json:"error"`
 	TrendTags []TrendTag `json:"trend_tags"`
 }
 
