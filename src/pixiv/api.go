@@ -74,18 +74,8 @@ func (a *AppPixivAPI) UserDetail(uid int) (*pixivstruct.UserDetail, error) {
 
 // UserIllusts type: [illust, manga]
 func (a *AppPixivAPI) UserIllusts(uid int, next_url string) (*pixivstruct.IllustsResponse, error) {
-	params := map[string]string{
-		"user_id": strconv.Itoa(uid),
-		"filter":  "for_ios",
-		"type":    "illust",
-		"offset":  "0",
-	}
-	if next_url == "" {
-		next_url = API_BASE + USER_AUTHOR
-	} else {
-		params = nil
-	}
-	response := request.Get(next_url, params).Json(&pixivstruct.IllustsResponse{}).(*pixivstruct.IllustsResponse)
+	params := map[string]string{"user_id": strconv.Itoa(uid), "filter": "for_ios", "type": "illust", "offset": "0"}
+	response := request.Get(NextUrl(next_url, USER_AUTHOR, params)).Json(&pixivstruct.IllustsResponse{}).(*pixivstruct.IllustsResponse)
 	if response.Error.Message != "" {
 		return nil, errors.New(response.Error.Message)
 	}
@@ -343,11 +333,7 @@ func (a *AppPixivAPI) UserBookmarkTagsIllust(restrict string, offset int) (*pixi
 }
 
 func userFollowStats(urlEnd string, userID int, restrict string, offset int) (*pixivstruct.UserFollowList, error) {
-	params := map[string]string{
-		"user_id":  strconv.Itoa(userID),
-		"restrict": restrict,
-		"offset":   strconv.Itoa(offset),
-	}
+	params := map[string]string{"user_id": strconv.Itoa(userID), "restrict": restrict, "offset": strconv.Itoa(offset)}
 	response := request.Get(API_BASE+USER+urlEnd, params).Json(&pixivstruct.UserFollowList{}).(*pixivstruct.UserFollowList)
 	if response.Error.Message != "" {
 		return nil, errors.New(response.Error.Message)
