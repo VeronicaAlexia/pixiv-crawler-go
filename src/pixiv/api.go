@@ -263,20 +263,15 @@ func (a *AppPixivAPI) SearchIllust(word string, searchTarget string, sort string
 	return data, nil
 }
 
-type illustBookmarkDetailParams struct {
-	IllustID uint64 `url:"illust_id,omitempty"`
-}
-
 // IllustBookmarkDetail Bookmark details
-func (a *AppPixivAPI) IllustBookmarkDetail(illustID uint64) (*pixivstruct.IllustBookmarkDetail, error) {
-	data := &pixivstruct.IllustBookmarkDetail{}
-	params := &illustBookmarkDetailParams{
-		IllustID: illustID,
+func (a *AppPixivAPI) IllustBookmarkDetail(illustID int) (*pixivstruct.IllustBookmarkDetail, error) {
+	response := request.Get(
+		API_BASE+BOOKMARK_DETAIL, map[string]string{"illust_id": strconv.Itoa(illustID)},
+	).Json(&pixivstruct.IllustBookmarkDetail{}).(*pixivstruct.IllustBookmarkDetail)
+	if response.Error.Message != "" {
+		return nil, errors.New(response.Error.Message)
 	}
-	if err := a.request(BOOKMARK_DETAIL, params, data, true); err != nil {
-		return nil, err
-	}
-	return data, nil
+	return response, nil
 }
 
 // IllustBookmarkAdd Add bookmark

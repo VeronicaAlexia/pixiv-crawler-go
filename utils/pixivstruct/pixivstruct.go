@@ -187,6 +187,7 @@ type SearchIllustResult struct {
 }
 
 type IllustBookmarkDetail struct {
+	Error          Error          `json:"error"`
 	BookmarkDetail BookmarkDetail `json:"bookmark_detail"`
 }
 
