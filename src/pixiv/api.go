@@ -279,34 +279,25 @@ func (a *AppPixivAPI) IllustBookmarkDetail(illustID uint64) (*pixivstruct.Illust
 	return data, nil
 }
 
-type illustBookmarkAddParams struct {
-	IllustID uint64   `url:"illust_id,omitempty"`
-	Restrict string   `url:"restrict,omitempty"`
-	Tags     []string `url:"tags,omitempty"`
-}
-
 // IllustBookmarkAdd Add bookmark
-func (a *AppPixivAPI) IllustBookmarkAdd(illustID uint64, restrict string, tags []string) error {
-	params := illustBookmarkAddParams{
-		IllustID: illustID,
-		Restrict: restrict,
-	}
+func (a *AppPixivAPI) IllustBookmarkAdd(illustID int, restrict string, tags []string) error {
+	params := map[string]string{"illust_id": strconv.Itoa(illustID), "restrict": restrict}
 	if tags != nil {
-		params.Tags = tags
+		params["tags"] = "[" + strings.Join(tags, ",") + "]"
 	}
-	return a.post(BOOKMARK_ADD, params, nil, true)
-}
-
-type illustBookmarkDeleteParams struct {
-	IllustID uint64 `url:"illust_id,omitempty"`
+	if response := request.Post(API_BASE+BOOKMARK_ADD, params).Content(); response == nil {
+		return errors.New("IllustBookmarkAdd failed")
+	}
+	return nil
 }
 
 // IllustBookmarkDelete Remove bookmark
-func (a *AppPixivAPI) IllustBookmarkDelete(illustID uint64) error {
-	params := &illustBookmarkDeleteParams{
-		IllustID: illustID,
+func (a *AppPixivAPI) IllustBookmarkDelete(illustID int) error {
+	params := map[string]string{"illust_id": strconv.Itoa(illustID)}
+	if response := request.Post(API_BASE+BOOKMARK_DELETE, params).Content(); response == nil {
+		return errors.New("delete bookmark failed")
 	}
-	return a.post(BOOKMARK_DELETE, params, nil, true)
+	return nil
 }
 
 type userBookmarkTagsIllustParams struct {
@@ -347,13 +338,12 @@ func (a *AppPixivAPI) UserFollower(userID int, restrict string, offset int) (*pi
 }
 
 func userFollowPost(urlEnd string, userID int, restrict string) error {
-	params := map[string]string{"user_id": strconv.Itoa(userID), "restrict": restrict}
-	response := request.Post(API_BASE+USER_FOLLOW+urlEnd, params).Content()
-	if response == nil {
+	if response := request.Post(
+		API_BASE+USER_FOLLOW+urlEnd, map[string]string{"user_id": strconv.Itoa(userID), "restrict": restrict},
+	).Content(); response == nil {
 		return errors.New("the user is already followed")
-	} else {
-		return nil
 	}
+	return nil
 }
 
 // UserFollowAdd Follow users
