@@ -40,5 +40,6 @@ func TestPixivNovel(t *testing.T) {
 		book_info += "id: " + fmt.Sprint(response.Novel.ID) + "\n"
 		book_info += "uploaddate: " + response.Novel.CreateDate.Format("2006-01-02 15:04:05") + "\n"
 		file.Open("novel/"+response.Novel.Title+".txt", "w", book_info)
+		app.App.NovelContent("18729784")
 	}
 }

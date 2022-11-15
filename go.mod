@@ -4,8 +4,8 @@ go 1.19
 
 require (
 	github.com/BurntSushi/toml v1.2.1
+	github.com/antchfx/htmlquery v1.2.5
 	github.com/cpuguy83/go-md2man/v2 v2.0.2
-	github.com/dghubble/sling v1.4.0
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/hashicorp/hcl v1.0.0
 	github.com/magiconair/properties v1.8.6
@@ -28,6 +28,7 @@ require (
 	cloud.google.com/go v0.102.0 // indirect
 	cloud.google.com/go/compute v1.7.0 // indirect
 	cloud.google.com/go/firestore v1.6.1 // indirect
+	github.com/antchfx/xpath v1.2.1 // indirect
 	github.com/armon/go-metrics v0.4.0 // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
@@ -36,7 +37,6 @@ require (
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
-	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.1.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.4.0 // indirect
 	github.com/hashicorp/consul/api v1.15.2 // indirect
