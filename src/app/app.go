@@ -23,7 +23,7 @@ func DownloaderSingly(illust_id string) {
 			return
 		}
 		if illust == nil || illust.MetaSinglePage == nil {
-			fmt.Println("download fail,illust is nil")
+			fmt.Println("download fail, illust is nil")
 			return
 		}
 		if illust.MetaSinglePage.OriginalImageURL == "" {

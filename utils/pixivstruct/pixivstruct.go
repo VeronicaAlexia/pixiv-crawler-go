@@ -184,6 +184,7 @@ type TrendTag struct {
 }
 
 type SearchIllustResult struct {
+	Error           Error    `json:"error"`
 	Illusts         []Illust `json:"illusts"`
 	NextURL         string   `json:"next_url"`
 	SearchSpanLimit int      `json:"search_span_limit"`
@@ -206,6 +207,7 @@ type BookmarkDetailTag struct {
 }
 
 type UserBookmarkTags struct {
+	Error        Error         `json:"error"`
 	BookmarkTags []interface{} `json:"bookmark_tags"`
 	NextURL      string        `json:"next_url"`
 }
@@ -224,6 +226,7 @@ type UserPreview struct {
 }
 
 type UserList struct {
+	Error Error         `json:"error"`
 	Users []interface{} `json:"users"`
 }
 

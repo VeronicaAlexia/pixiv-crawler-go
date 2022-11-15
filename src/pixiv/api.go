@@ -1,46 +1,18 @@
 package pixiv
 
 import (
-	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/config"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/request"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/utils/pixivstruct"
-	"net/http"
-	"net/url"
+	"github.com/pkg/errors"
 	"strconv"
 	"strings"
-	"time"
-
-	"github.com/dghubble/sling"
-	"github.com/pkg/errors"
 )
 
 // AppPixivAPI -- App-API (6.x - app-api.pixiv.net)
-type AppPixivAPI struct {
-	sling   *sling.Sling
-	timeout time.Duration
-	proxy   *url.URL
-}
+type AppPixivAPI struct{}
 
 func NewApp() *AppPixivAPI {
-	s := sling.New().Base(API_BASE).Set("User-Agent", "PixivIOSApp/7.6.2 (iOS 12.2; iPhone9,1)").Set("App-Version", "7.6.2").Set("App-OS-VERSION", "12.2").Set("App-OS", "ios")
-	return &AppPixivAPI{sling: s}
-}
-
-func (a *AppPixivAPI) request(path string, params, data interface{}, auth bool) (err error) {
-	var res *http.Response
-	if auth {
-		res, err = a.sling.New().Get(path).Set("Authorization", "Bearer "+config.Vars.PixivToken).QueryStruct(params).ReceiveSuccess(data)
-		if res.StatusCode == 400 {
-			if !request.RefreshAuth() {
-				return errors.New("refresh token failed")
-			} else {
-				return a.request(path, params, data, auth)
-			}
-		}
-	} else {
-		res, err = a.sling.New().Get(path).QueryStruct(params).ReceiveSuccess(data)
-	}
-	return err
+	return &AppPixivAPI{}
 }
 
 func (a *AppPixivAPI) UserDetail(uid int) (*pixivstruct.UserDetail, error) {
@@ -171,15 +143,6 @@ func (a *AppPixivAPI) TrendingTagsIllust(filter string) (*pixivstruct.TrendingTa
 	return response, nil
 }
 
-type searchIllustParams struct {
-	Word         string `url:"word,omitempty"`
-	SearchTarget string `url:"search_target,omitempty"`
-	Sort         string `url:"sort,omitempty"`
-	Filter       string `url:"filter,omitempty"`
-	Duration     string `url:"duration,omitempty"`
-	Offset       int    `url:"offset,omitempty"`
-}
-
 // SearchIllust search for
 //
 // searchTarget - Search type
@@ -191,20 +154,20 @@ type searchIllustParams struct {
 // sort: [date_desc, date_asc]
 //
 // duration: [within_last_day, within_last_week, within_last_month]
-func (a *AppPixivAPI) SearchIllust(word string, searchTarget string, sort string, duration string, filter string, offset int) (*pixivstruct.SearchIllustResult, error) {
-	data := &pixivstruct.SearchIllustResult{}
-	params := &searchIllustParams{
-		Word:         word,
-		SearchTarget: searchTarget,
-		Sort:         sort,
-		Filter:       filter,
-		Duration:     duration,
-		Offset:       offset,
+func (a *AppPixivAPI) SearchIllust(word string, next_url string) (*pixivstruct.SearchIllustResult, error) {
+	params := map[string]string{
+		"word":          word,
+		"search_target": "partial_match_for_tags",
+		"sort":          "date_desc",
+		"filter":        "for_ios",
+		"duration":      "within_last_day",
+		"offset":        "0",
 	}
-	if err := a.request(SEARCH, params, data, true); err != nil {
-		return nil, err
+	response := request.Get(NextUrl(next_url, SEARCH, params)).Json(&pixivstruct.SearchIllustResult{}).(*pixivstruct.SearchIllustResult)
+	if response.Error.Message != "" {
+		return nil, errors.New(response.Error.Message)
 	}
-	return data, nil
+	return response, nil
 }
 
 // IllustBookmarkDetail Bookmark details
@@ -238,22 +201,14 @@ func (a *AppPixivAPI) IllustBookmarkDelete(illustID int) error {
 	return nil
 }
 
-type userBookmarkTagsIllustParams struct {
-	Restrict string
-	Offset   int
-}
-
 // UserBookmarkTagsIllust User favorite tag list
-func (a *AppPixivAPI) UserBookmarkTagsIllust(restrict string, offset int) (*pixivstruct.UserBookmarkTags, error) {
-	data := &pixivstruct.UserBookmarkTags{}
-	params := &userBookmarkTagsIllustParams{
-		Restrict: restrict,
-		Offset:   offset,
+func (a *AppPixivAPI) UserBookmarkTagsIllust(restrict string, next_url string) (*pixivstruct.UserBookmarkTags, error) {
+	params := map[string]string{"restrict": restrict, "offset": "0"}
+	response := request.Get(NextUrl(next_url, BOOKMARK_TAG, params)).Json(&pixivstruct.UserBookmarkTags{}).(*pixivstruct.UserBookmarkTags)
+	if response.Error.Message != "" {
+		return nil, errors.New(response.Error.Message)
 	}
-	if err := a.request(BOOKMARK_TAG, params, data, true); err != nil {
-		return nil, err
-	}
-	return data, nil
+	return response, nil
 }
 
 func userFollowStats(urlEnd string, userID int, restrict string, offset int) (*pixivstruct.UserFollowList, error) {
@@ -294,42 +249,24 @@ func (a *AppPixivAPI) UserFollowDelete(userID int, restrict string) error {
 	return userFollowPost("delete", userID, restrict)
 }
 
-type userMyPixivParams struct {
-	UserID uint64 `url:"user_id,omitempty"`
-	Offset int    `url:"offset,omitempty"`
-}
-
 // UserMyPixiv Users in MyPixiv
-func (a *AppPixivAPI) UserMyPixiv(userID uint64, offset int) (*pixivstruct.UserFollowList, error) {
-	data := &pixivstruct.UserFollowList{}
-	params := &userMyPixivParams{
-		UserID: userID,
-		Offset: offset,
+func (a *AppPixivAPI) UserMyPixiv(userID int, next_url string) (*pixivstruct.UserFollowList, error) {
+	params := map[string]string{"user_id": strconv.Itoa(userID), "offset": "0"}
+	response := request.Get(NextUrl(next_url, USER_MYPIXIV, params)).Json(&pixivstruct.UserFollowList{}).(*pixivstruct.UserFollowList)
+	if response.Error.Message != "" {
+		return nil, errors.New(response.Error.Message)
 	}
-	if err := a.request(USER_MYPIXIV, params, data, true); err != nil {
-		return nil, err
-	}
-	return data, nil
-}
-
-type userListParams struct {
-	UserID uint64 `url:"user_id,omitempty"`
-	Filter string `url:"filter,omitempty"`
-	Offset int    `url:"offset,omitempty"`
+	return response, nil
 }
 
 // UserList Blacklisted users
-func (a *AppPixivAPI) UserList(userID uint64, filter string, offset int) (*pixivstruct.UserList, error) {
-	data := &pixivstruct.UserList{}
-	params := &userListParams{
-		UserID: userID,
-		Filter: filter,
-		Offset: offset,
+func (a *AppPixivAPI) UserList(userID int, next_url string) (*pixivstruct.UserList, error) {
+	params := map[string]string{"user_id": strconv.Itoa(userID), "offset": "0", "filter": "for_ios"}
+	response := request.Get(NextUrl(next_url, USER_LIST, params)).Json(&pixivstruct.UserList{}).(*pixivstruct.UserList)
+	if response.Error.Message != "" {
+		return nil, errors.New(response.Error.Message)
 	}
-	if err := a.request(USER_LIST, params, data, true); err != nil {
-		return nil, err
-	}
-	return data, nil
+	return response, nil
 }
 
 // UgoiraMetadata Ugoira Info
