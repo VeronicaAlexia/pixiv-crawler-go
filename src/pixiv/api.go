@@ -104,19 +104,13 @@ func (a *AppPixivAPI) IllustRelated(illustID int, filter string, seedIllustIDs [
 // IllustRecommended Home Recommendation
 // contentType: [illust, manga]
 
-func (a *AppPixivAPI) Recommended(url string, requireAuth bool) (*pixivstruct.IllustRecommended, error) {
+func (a *AppPixivAPI) Recommended(next_url string, requireAuth bool) (*pixivstruct.IllustRecommended, error) {
 	params := map[string]string{"include_privacy_policy": "true", "include_ranking_illusts": "true"}
-	if url == "" {
-		if requireAuth {
-			url = RECOMMENDED // auth required
-		} else {
-			url = RECOMMENDED_NO_LOGIN // no auth required
-		}
-	} else {
-		url = strings.ReplaceAll(url, API_BASE, "")
-		params = nil
+	var path = RECOMMENDED_NO_LOGIN
+	if requireAuth {
+		path = RECOMMENDED // auth required
 	}
-	response := request.Get(API_BASE+url, params).Json(&pixivstruct.IllustRecommended{}).(*pixivstruct.IllustRecommended)
+	response := request.Get(NextUrl(next_url, path, params)).Json(&pixivstruct.IllustRecommended{}).(*pixivstruct.IllustRecommended)
 	if response.Error.Message != "" {
 		return nil, errors.New(response.Error.Message)
 	}
@@ -144,7 +138,6 @@ func (a *AppPixivAPI) TrendingTagsIllust(filter string) (*pixivstruct.TrendingTa
 }
 
 // SearchIllust search for
-//
 // searchTarget - Search type
 //
 //	"partial_match_for_tags"  - The label part is consistent
