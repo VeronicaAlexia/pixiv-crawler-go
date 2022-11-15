@@ -3,7 +3,6 @@ package download
 import (
 	"fmt"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/config"
-	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/progressbar"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/request"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/threadpool"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/src/pixiv"
@@ -18,7 +17,7 @@ type Download struct {
 	ArrayLength   int
 	Illusts       []pixivstruct.Illust
 	Thread        *threadpool.ThreadStruct
-	Progress      *progressbar.Bar
+	Progress      *Bar
 }
 
 func DownloadTask(Illusts []pixivstruct.Illust, start bool) *Download {
@@ -37,7 +36,7 @@ func DownloadTask(Illusts []pixivstruct.Illust, start bool) *Download {
 		Thread:        threadpool.InitThread(),
 		DownloadArray: ImageList,
 		ArrayLength:   len(ImageList),
-		Progress:      progressbar.NewProgress(len(ImageList), ""),
+		Progress:      NewProgress(len(ImageList), ""),
 	}
 	if !start {
 		return illust_struct // return illust struct
@@ -84,19 +83,3 @@ func ImagesSingly(url string, thread *Download) {
 		thread.Progress.AddProgressCount(thread.Thread.GetProgressCount())
 	}
 }
-
-//func (thread *Download) DownloadImages() {
-//	if thread.ArrayLength != 0 {
-//		fmt.Println("\n\n一共", thread.ArrayLength, "张图片,开始下载中...")
-//		thread.Thread.ProgressLength = thread.ArrayLength
-//		for _, image_url := range thread.DownloadArray {
-//			thread.Thread.Add()
-//			go Images(image_url, thread)
-//		}
-//		thread.Progress.ProgressEnd()
-//		thread.Thread.Close() // Wait for all threads to finish
-//	} else {
-//		fmt.Println("add image list fail,please check image list")
-//	}
-//	thread.DownloadArray = nil
-//}
