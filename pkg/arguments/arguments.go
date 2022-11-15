@@ -4,7 +4,7 @@ import (
 	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/cli"
 )
 
-var CommandLines = struct {
+type Command struct {
 	IllustID  string
 	UserID    int
 	Following bool
@@ -15,7 +15,9 @@ var CommandLines = struct {
 	Name      string
 	URL       string
 	Max       int
-}{}
+}
+
+var CommandLines = Command{}
 
 var CommandLineFlag = []cli.Flag{
 	cli.StringFlag{

@@ -41,40 +41,43 @@ func main() {
 	cli_app.Version = config.Vars.VersionName
 	cli_app.Usage = "download image from pixiv "
 	cli_app.Flags = arguments.CommandLineFlag
-	cli_app.Action = command_line_shell
+	cli_app.Action = func(c *cli.Context) {
+		config.Vars.ThreadMax = arguments.CommandLines.Max
+		if !command_line_shell(arguments.CommandLines) {
+			if len(os.Args) == 1 || os.Args[1] == "-h" || os.Args[1] == "--help" {
+				_ = cli.ShowAppHelp(c)
+			}
+		}
+	}
 	if err := cli_app.Run(os.Args); err != nil {
 		log.Fatal(err)
 	}
 }
-func command_line_shell(c *cli.Context) error {
-	config.Vars.ThreadMax = arguments.CommandLines.Max
+func command_line_shell(args arguments.Command) bool {
+	if args.IllustID != "" {
+		app.DownloaderSingly(args.IllustID)
 
-	if arguments.CommandLines.IllustID != "" {
-		app.DownloaderSingly(arguments.CommandLines.IllustID)
+	} else if args.AuthorID != 0 {
+		app.ShellAuthor("", args.AuthorID)
 
-	} else if arguments.CommandLines.AuthorID != 0 {
-		app.ShellAuthor("", arguments.CommandLines.AuthorID)
+	} else if args.URL != "" {
+		app.DownloaderSingly(utils.GetInt(args.URL))
 
-	} else if arguments.CommandLines.URL != "" {
-		app.DownloaderSingly(utils.GetInt(arguments.CommandLines.URL))
+	} else if args.Following {
+		app.GET_USER_FOLLOWING(args.UserID)
 
-	} else if arguments.CommandLines.Following {
-		app.GET_USER_FOLLOWING(arguments.CommandLines.UserID)
-
-	} else if arguments.CommandLines.Recommend {
+	} else if args.Recommend {
 		app.ShellRecommend("", true)
 
-	} else if arguments.CommandLines.Ranking {
+	} else if args.Ranking {
 		app.ShellRanking()
 
-	} else if arguments.CommandLines.Stars {
+	} else if args.Stars {
 		app.ShellStars(config.Vars.UserID, "")
 
 	} else {
-		if len(os.Args) == 1 || os.Args[1] == "-h" || os.Args[1] == "--help" {
-			_ = cli.ShowAppHelp(c)
-		}
+		return false
 
 	}
-	return nil
+	return true
 }
