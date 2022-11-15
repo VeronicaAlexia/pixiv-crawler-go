@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/config"
+	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/file"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/request"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/src/app"
 	"testing"
@@ -20,8 +21,7 @@ func init_test() {
 			config.VarsFile.SaveConfig()
 		}
 	} else {
-		res, err := app.App.UserDetail(config.Vars.UserID)
-		if err != nil {
+		if res, err := app.App.UserDetail(config.Vars.UserID); err != nil {
 			panic(err)
 		} else {
 			fmt.Println("account: ", res.User.Name, "\tid: ", res.User.ID)
@@ -31,10 +31,14 @@ func init_test() {
 
 func TestPixivNovel(t *testing.T) {
 	init_test()
+	file.NewFile("novel")
 	if response, err := app.App.NovelDetail("18729784"); err != nil {
 		t.Error(err)
 	} else {
-		println(response.Title)
-		fmt.Println(response.ID)
+		book_info := ""
+		book_info += "title: " + response.Novel.Title + "\n"
+		book_info += "id: " + fmt.Sprint(response.Novel.ID) + "\n"
+		book_info += "uploaddate: " + response.Novel.CreateDate.Format("2006-01-02 15:04:05") + "\n"
+		file.Open("novel/"+response.Novel.Title+".txt", "w", book_info)
 	}
 }
