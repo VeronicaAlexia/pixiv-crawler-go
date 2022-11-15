@@ -5,13 +5,13 @@ import (
 	"os"
 )
 
-func Open(file_path string, mode string) []byte {
+func Open(file_path string, mode string, content string) []byte {
 	if mode == "r" {
 		return ReadFile(file_path)
 	} else if mode == "w" {
-		WriteFile(file_path, "", 0777)
+		WriteFile(file_path, content, 0777)
 	} else if mode == "a" {
-		WriteFile(file_path, "", 0666)
+		WriteFile(file_path, content, 0666)
 	}
 	return nil
 }

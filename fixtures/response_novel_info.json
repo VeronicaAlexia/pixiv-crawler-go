@@ -1,0 +1,65 @@
+{
+  "novel": {
+    "id": 18729784,
+    "title": "言の葉の端と端を結んで",
+    "caption": "成人済みルームシェアぼ喜多が「ただいま」と「おかえり」を言うだけのお話。飲酒喫煙描写注意。",
+    "restrict": 0,
+    "x_restrict": 0,
+    "is_original": false,
+    "image_urls": {
+      "square_medium": "https://i.pximg.net/c/128x128/novel-cover-master/img/2022/11/15/19/41/13/ci18729784_77d71ad8acf27c2c2b47a56ef3e6efbb_square1200.jpg",
+      "medium": "https://i.pximg.net/c/176x352/novel-cover-master/img/2022/11/15/19/41/13/ci18729784_77d71ad8acf27c2c2b47a56ef3e6efbb_master1200.jpg",
+      "large": "https://i.pximg.net/c/240x480_80/novel-cover-master/img/2022/11/15/19/41/13/ci18729784_77d71ad8acf27c2c2b47a56ef3e6efbb_master1200.jpg"
+    },
+    "create_date": "2022-11-15T19:41:13+09:00",
+    "tags": [
+      {
+        "name": "ぼっち・ざ・ろっく!",
+        "translated_name": null,
+        "added_by_uploaded_user": true
+      },
+      {
+        "name": "後藤ひとり",
+        "translated_name": null,
+        "added_by_uploaded_user": true
+      },
+      {
+        "name": "喜多郁代",
+        "translated_name": null,
+        "added_by_uploaded_user": true
+      },
+      {
+        "name": "ぼ喜多",
+        "translated_name": null,
+        "added_by_uploaded_user": true
+      },
+      {
+        "name": "百合",
+        "translated_name": null,
+        "added_by_uploaded_user": true
+      }
+    ],
+    "page_count": 1,
+    "text_length": 6351,
+    "user": {
+      "id": 4451904,
+      "name": "守次 奏",
+      "account": "proud-chieri",
+      "profile_image_urls": {
+        "medium": "https://s.pximg.net/common/images/no_profile.png"
+      },
+      "is_followed": false
+    },
+    "series": {},
+    "is_bookmarked": false,
+    "total_bookmarks": 15,
+    "total_view": 161,
+    "visible": true,
+    "total_comments": 0,
+    "is_muted": false,
+    "is_mypixiv_only": false,
+    "is_x_restricted": false,
+    "novel_ai_type": 1,
+    "comment_access_control": 0
+  }
+}
