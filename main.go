@@ -47,6 +47,8 @@ func main() {
 	}
 }
 func command_line_shell(c *cli.Context) error {
+	config.Vars.ThreadMax = arguments.CommandLines.Max
+
 	if arguments.CommandLines.IllustID != "" {
 		app.DownloaderSingly(arguments.CommandLines.IllustID)
 

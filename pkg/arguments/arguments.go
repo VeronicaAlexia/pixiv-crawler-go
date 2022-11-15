@@ -14,6 +14,7 @@ var CommandLines = struct {
 	Stars     bool
 	Name      string
 	URL       string
+	Max       int
 }{}
 
 var CommandLineFlag = []cli.Flag{
@@ -41,11 +42,11 @@ var CommandLineFlag = []cli.Flag{
 		Usage:       "input user id",
 		Destination: &CommandLines.UserID,
 	},
-	cli.StringFlag{
-		Name:        "n, name",
-		Value:       "",
-		Usage:       "author name",
-		Destination: &CommandLines.Name,
+	cli.IntFlag{
+		Name:        "m, max",
+		Value:       16,
+		Usage:       "input max thread number",
+		Destination: &CommandLines.Max,
 	},
 	cli.BoolFlag{
 		Name:        "f, following",

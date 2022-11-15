@@ -1,7 +1,6 @@
-
 <h1 align="center">
   <img src="./docs/logo.svg" alt="Pixiv_logo" width ="400">
-  <br>pixiv crawler for <a href="https://www.pixiv.net/">pixiv.net</a><br>  
+  <br><a href="https://www.pixiv.net/">pixiv</a> crawler go<br>  
 </h1> 
 
 ### pixiv login.
@@ -10,7 +9,7 @@
 - The Pixiv app now logs in through `https://accounts.pixiv.net/login`
 - but this page is protected by Google reCAPTCHA, which seems impossible to circumvent.
 - so, you can't use this crawler to with login account,but you can use this crawler to web get the account token to
-  login. 
+  login.
 
 ## start crawler with command line arguments
 
@@ -29,9 +28,12 @@ GLOBAL OPTIONS:
 
 ```
 
-## install
+## install pixiv crawler go
+ 
 
-``` pip install pixivlib ```
+```Clone
+ gh repo clone VeronicaAlexia/pixiv-crawler-go
+```
 
 ## about command line arguments and usage
 
@@ -41,6 +43,8 @@ GLOBAL OPTIONS:
     - ``` -l / --login```
 - **download image**
     - ```-d / --download <image_id> ```
+- **download image**
+    - ```-u / --url <url> ```
 - **download author illustrations**
     - ``` -a / --author <author_id> ```
 - **change the thread number**
@@ -52,9 +56,8 @@ GLOBAL OPTIONS:
 - **search illustrations**
     - ``` -s / --search <search_word> ```
 - **ranking illustrations**
-    - ``` -k / --rkaning ```
-- **clear cache**
-    - ``` -c / --clear_cache```
+    - ``` -r / --rkaning ```
+    -
 
 | functions                                    | complete |
 |----------------------------------------------|----------|
