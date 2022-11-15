@@ -30,22 +30,29 @@ func init_test() {
 }
 
 func TestPixivNovel(t *testing.T) {
+	novel_id := "18729784"
 	init_test()
 	file.NewFile("novel")
-	if response, err := app.App.NovelDetail("18729784"); err != nil {
+	if response, err := app.App.NovelDetail(novel_id); err != nil {
 		t.Error(err)
 	} else {
-		book_info := "title: " + response.Novel.Title + "\n"
-		book_info += "author: " + response.Novel.User.Name + "\n"
-		book_info += "novel_id: " + fmt.Sprint(response.Novel.ID) + "\n"
-		book_info += "update: " + response.Novel.CreateDate.Format("2006-01-02 15:04:05") + "\n"
-		book_info += "intro: " + response.Novel.Caption + "\n"
-		book_info += "tags: "
-		for _, tag := range response.Novel.Tags {
-			book_info += tag.Name + ", "
+		if chapter_content, ok := app.App.NovelContent(novel_id); ok == nil {
+			book_info := "title: " + response.Novel.Title + "\n"
+			book_info += "author: " + chapter_content["author_namer"] + "\n"
+			book_info += "novel_id: " + chapter_content["novel_id"] + "\n"
+			book_info += "update: " + chapter_content["update_date"] + "\n"
+			book_info += "intro: " + chapter_content["description"] + "\n"
+			book_info += "tags: "
+			for index, tag := range response.Novel.Tags {
+				book_info += tag.Name
+				if index != 0 {
+					book_info += ", "
+				}
+			}
+			file_path := "novel/" + response.Novel.Title + ".txt"
+			file.Open(file_path, "w", book_info+"\n\n"+chapter_content["content_text"])
+		} else {
+			t.Error(ok)
 		}
-		book_info += "\n"
-		file.Open("novel/"+response.Novel.Title+".txt", "w", book_info+"\n"+app.App.NovelContent("18729784"))
-
 	}
 }
