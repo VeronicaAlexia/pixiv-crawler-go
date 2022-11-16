@@ -55,11 +55,14 @@ func shell(args arguments.Command, c *cli.Context) {
 	} else if args.Recommend {
 		app.ShellRecommend("", true)
 
+	} else if args.Stars {
+		app.ShellStarsImages(config.Vars.UserID, "")
+
 	} else if args.Ranking {
 		app.ShellRanking()
 
-	} else if args.Stars {
-		app.ShellStarsImages(config.Vars.UserID, "")
+	} else if args.Login {
+		app.ShellLoginPixiv()
 
 	} else {
 		if len(os.Args) == 1 || os.Args[1] == "-h" || os.Args[1] == "--help" {

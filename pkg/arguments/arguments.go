@@ -6,15 +6,16 @@ import (
 
 type Command struct {
 	IllustID  string
-	UserID    int
+	Name      string
+	URL       string
 	Following bool
 	Recommend bool
 	Ranking   bool
-	AuthorID  int
 	Stars     bool
-	Name      string
-	URL       string
+	Login     bool
+	AuthorID  int
 	Max       int
+	UserID    int
 }
 
 var CommandLines = Command{}
@@ -69,5 +70,10 @@ var CommandLineFlag = []cli.Flag{
 		Name:        "rk, ranking",
 		Usage:       "ranking illust",
 		Destination: &CommandLines.Ranking,
+	},
+	cli.BoolFlag{
+		Name:        "l, login",
+		Usage:       "login pixiv account",
+		Destination: &CommandLines.Login,
 	},
 }
