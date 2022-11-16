@@ -14,17 +14,32 @@
 ## start crawler with command line arguments
 
 ```
+NAME:
+   image downloader - download image from pixiv 
+
+USAGE:
+   main.exe [global options] command [command options] [arguments...]
+
+VERSION:
+   2.1.0
+
+COMMANDS:
+   help, h  Shows a list of commands or help for one command
+
 GLOBAL OPTIONS:
-   -d value, --download value    input IllustID to download illusts
-   -u value, --url value         input pixiv url to download illusts
-   -a value, --author value      input author id to download illusts list
-   --user value, --userid value  input user id to search user info
-   -f, --following               download following author illusts
-   -r, --recommend               download recommend illusts
-   -s, --stars                   download stars illusts
-   --rk, --ranking               download illusts from ranking
-   --help, -h                    show args help message 
-   --version, -v                 print the program version 
+   -d value, --download value    Input IllustID to download illusts.
+   -u value, --url value         Input pixiv url to download illusts
+   -a value, --author value      Input AuthorID to download Author illusts. (default: 0)
+   --user value, --userid value  Input user id to change default user id (default: 0)
+   -m value, --max value         Input max thread number (default: 16)
+   -f, --following               Download illusts from following users
+   -r, --recommend               Download recommend illusts
+   -s, --stars                   download stars illusts.
+   --rk, --ranking               Download ranking illusts.
+   -l, --login                   login pixiv account
+   -n, --novel                   download novel
+   --help, -h                    show help
+   --version, -v                 print the version
 
 ```
 
@@ -45,6 +60,8 @@ GLOBAL OPTIONS:
     - ```-d / --download <image_id> ```
 - **download image**
     - ```-u / --url <url> ```
+- **download novel**
+    - ```-d / --download <novel_id> -n / --novel```
 - **download author illustrations**
     - ``` -a / --author <author_id> ```
 - **change the thread number**
@@ -57,7 +74,8 @@ GLOBAL OPTIONS:
     - ``` -s / --search <search_word> ```
 - **ranking illustrations**
     - ``` -r / --rkaning ```
-    -
+- **login account**
+    - ``` -l / --login```  
 
 | functions                                    | complete |
 |----------------------------------------------|----------|
