@@ -121,7 +121,6 @@ func ShellLoginPixiv() {
 }
 
 func ShellNovel(novel_id string) {
-	file.NewFile("novel")
 	response, err := App.NovelDetail(novel_id)
 	if err != nil {
 		fmt.Println("Request novel fail,please check network", err)

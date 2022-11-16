@@ -24,8 +24,13 @@ func init() {
 	}
 }
 
-func main() {
+func CreateFileInit() {
 	file.NewFile("imageFile")
+	file.NewFile("novel")
+}
+
+func main() {
+	CreateFileInit()
 	cli_app := cli.NewApp()
 	cli_app.Name = "image downloader"
 	cli_app.Version = config.Vars.VersionName
