@@ -8,13 +8,13 @@ type Command struct {
 	IllustID  string
 	Name      string
 	URL       string
+	AuthorID  string
 	Following bool
 	Recommend bool
 	Ranking   bool
 	Stars     bool
 	Login     bool
 	IsNovel   bool
-	AuthorID  int
 	ThreadMax int
 	UserID    int
 }
@@ -34,9 +34,9 @@ var CommandLineFlag = []cli.Flag{
 		Usage:       "Input pixiv url to download illusts",
 		Destination: &CommandLines.URL,
 	},
-	cli.IntFlag{
+	cli.StringFlag{
 		Name:        "a, author",
-		Value:       0,
+		Value:       "",
 		Usage:       "Input AuthorID to download Author illusts.",
 		Destination: &CommandLines.AuthorID,
 	},

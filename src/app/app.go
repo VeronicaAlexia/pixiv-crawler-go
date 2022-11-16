@@ -10,6 +10,7 @@ import (
 	"github.com/VeronicaAlexia/pixiv-crawler-go/src/pixiv"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/utils"
 	"path"
+	"strconv"
 )
 
 var App = pixiv.NewApp()
@@ -56,7 +57,7 @@ func ShellUserFollowing(UserID int) {
 	}
 	fmt.Println("一共", len(following.UserPreviews), "个关注的用户")
 	for _, user := range following.UserPreviews {
-		ShellAuthor("", user.User.ID)
+		ShellAuthor("", strconv.Itoa(user.User.ID))
 	}
 	// 刷新屏幕
 }
@@ -97,7 +98,7 @@ func ShellRecommend(next_url string, auth bool) {
 	}
 }
 
-func ShellAuthor(next_url string, author_id int) {
+func ShellAuthor(next_url string, author_id string) {
 	if illusts, err := App.UserIllusts(author_id, next_url); err == nil {
 		download.DownloadTask(illusts.Illusts, true)
 		if illusts.NextURL != "" { // If there is a next page, continue to request

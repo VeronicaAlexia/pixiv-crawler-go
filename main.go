@@ -53,7 +53,7 @@ func shell(args arguments.Command, c *cli.Context) {
 			app.DownloaderSingly(IllustID)
 		}
 
-	} else if args.AuthorID != 0 {
+	} else if args.AuthorID != "" {
 		app.ShellAuthor("", args.AuthorID)
 
 	} else if args.Following {
