@@ -163,3 +163,36 @@ type NovelContent struct {
 		AiType             int         `json:"aiType"`
 	} `json:"body"`
 }
+type SeriesContent struct {
+	Error   bool   `json:"error"`
+	Message string `json:"message"`
+	Body    struct {
+		SeriesContents []struct {
+			Id     string `json:"id"`
+			UserId string `json:"userId"`
+			Series struct {
+				Id           int `json:"id"`
+				ViewableType int `json:"viewableType"`
+				ContentOrder int `json:"contentOrder"`
+			} `json:"series"`
+			Title             string      `json:"title"`
+			CommentHtml       string      `json:"commentHtml"`
+			Tags              []string    `json:"tags"`
+			Restrict          int         `json:"restrict"`
+			XRestrict         int         `json:"xRestrict"`
+			IsOriginal        bool        `json:"isOriginal"`
+			TextLength        int         `json:"textLength"`
+			CharacterCount    int         `json:"characterCount"`
+			WordCount         int         `json:"wordCount"`
+			UseWordCount      bool        `json:"useWordCount"`
+			ReadingTime       int         `json:"readingTime"`
+			BookmarkCount     int         `json:"bookmarkCount"`
+			Url               string      `json:"url"`
+			UploadTimestamp   int         `json:"uploadTimestamp"`
+			ReuploadTimestamp int         `json:"reuploadTimestamp"`
+			IsBookmarkable    bool        `json:"isBookmarkable"`
+			BookmarkData      interface{} `json:"bookmarkData"`
+			AiType            int         `json:"aiType"`
+		} `json:"seriesContents"`
+	} `json:"body"`
+}

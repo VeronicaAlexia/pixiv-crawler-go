@@ -2,6 +2,7 @@ package pixiv
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/request"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/utils"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/utils/pixivstruct"
@@ -26,19 +27,23 @@ func (a *AppPixivAPI) NovelContent(novel_id string) (string, error) {
 	if response.Error {
 		return "", errors.New(response.Message)
 	}
-	//return map[string]string{
-	//	"novel_id":     response.Body.ID,
-	//	"author_id":    response.Body.UserID,
-	//	"book_name":    response.Body.Title,
-	//	"cover_url":    response.Body.CoverURL,
-	//	"description":  response.Body.Description,
-	//	"content_text": response.Body.Content,
-	//	"author_namer": response.Body.UserName,
-	//	"create_date":  response.Body.CreateDate.Format("2006-01-02 15:04:05"),
-	//	"update_date":  response.Body.UploadDate.Format("2006-01-02 15:04:05"),
-	//}, nil
 	return response.Body.Content, nil
 }
+
+func NovelSeriesContent(series_id string) ([]string, error) {
+	params := map[string]string{"limit": "30", "last_order": "0", "order_by": "asc"}
+	response := request.Get(WEB_BASE+WEB_BOOK_SERIES+series_id, params).Json(&pixivstruct.SeriesContent{}).(*pixivstruct.SeriesContent)
+	if response.Error {
+		return nil, errors.New(response.Message)
+	}
+	var series_content_list []string
+	for _, novel := range response.Body.SeriesContents {
+		fmt.Println("title: ", novel.Title)
+		series_content_list = append(series_content_list, novel.Id)
+	}
+	return series_content_list, nil
+}
+
 func (a *AppPixivAPI) AppNovelContent(novel_id string) string {
 	response := request.Get(API_BASE+BOOK_CONTENT, map[string]string{"id": novel_id}).Content()
 	if response != nil {

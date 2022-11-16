@@ -1,0 +1,128 @@
+{
+  "error": false,
+  "message": "",
+  "body": {
+    "seriesContents": [
+      {
+        "id": "17605545",
+        "userId": "81726566",
+        "series": {
+          "id": 8938241,
+          "viewableType": 0,
+          "contentOrder": 1
+        },
+        "title": "珍藏的八音盒，来自曾经室友的婚礼请帖",
+        "commentHtml": "",
+        "tags": [
+          "R-18",
+          "百合"
+        ],
+        "restrict": 0,
+        "xRestrict": 1,
+        "isOriginal": true,
+        "textLength": 3807,
+        "characterCount": 3807,
+        "wordCount": 2290,
+        "useWordCount": false,
+        "readingTime": 571,
+        "bookmarkCount": 27,
+        "url": "https://i.pximg.net/c/150x150_80/novel-cover-master/img/2022/05/17/04/53/20/sci8938241_1f154e4793625e69776e05ed72d767db_master1200.jpg",
+        "uploadTimestamp": 1652731054,
+        "reuploadTimestamp": 1652731054,
+        "isBookmarkable": true,
+        "bookmarkData": null,
+        "aiType": 0
+      },
+      {
+        "id": "17605548",
+        "userId": "81726566",
+        "series": {
+          "id": 8938241,
+          "viewableType": 0,
+          "contentOrder": 2
+        },
+        "title": "无法控制的情欲，失控的道路",
+        "commentHtml": "",
+        "tags": [
+          "R-18",
+          "百合"
+        ],
+        "restrict": 0,
+        "xRestrict": 1,
+        "isOriginal": true,
+        "textLength": 2026,
+        "characterCount": 2026,
+        "wordCount": 1246,
+        "useWordCount": false,
+        "readingTime": 303,
+        "bookmarkCount": 6,
+        "url": "https://i.pximg.net/c/150x150_80/novel-cover-master/img/2022/05/17/04/53/20/sci8938241_1f154e4793625e69776e05ed72d767db_master1200.jpg",
+        "uploadTimestamp": 1652731178,
+        "reuploadTimestamp": 1652814166,
+        "isBookmarkable": true,
+        "bookmarkData": null,
+        "aiType": 0
+      },
+      {
+        "id": "17605554",
+        "userId": "81726566",
+        "series": {
+          "id": 8938241,
+          "viewableType": 0,
+          "contentOrder": 3
+        },
+        "title": "疯狂的碰撞，一闪而过的火花",
+        "commentHtml": "",
+        "tags": [
+          "R-18",
+          "百合"
+        ],
+        "restrict": 0,
+        "xRestrict": 1,
+        "isOriginal": true,
+        "textLength": 5346,
+        "characterCount": 5346,
+        "wordCount": 3147,
+        "useWordCount": false,
+        "readingTime": 801,
+        "bookmarkCount": 9,
+        "url": "https://i.pximg.net/c/150x150_80/novel-cover-master/img/2022/05/17/04/53/20/sci8938241_1f154e4793625e69776e05ed72d767db_master1200.jpg",
+        "uploadTimestamp": 1652731405,
+        "reuploadTimestamp": 1652814792,
+        "isBookmarkable": true,
+        "bookmarkData": null,
+        "aiType": 0
+      },
+      {
+        "id": "18734150",
+        "userId": "81726566",
+        "series": {
+          "id": 8938241,
+          "viewableType": 0,
+          "contentOrder": 4
+        },
+        "title": "是纯爱啊，即使如此也是纯爱",
+        "commentHtml": "",
+        "tags": [
+          "R-18",
+          "百合"
+        ],
+        "restrict": 0,
+        "xRestrict": 1,
+        "isOriginal": true,
+        "textLength": 2380,
+        "characterCount": 2380,
+        "wordCount": 1388,
+        "useWordCount": false,
+        "readingTime": 357,
+        "bookmarkCount": 2,
+        "url": "https://i.pximg.net/c/150x150_80/novel-cover-master/img/2022/05/17/04/53/20/sci8938241_1f154e4793625e69776e05ed72d767db_master1200.jpg",
+        "uploadTimestamp": 1668581589,
+        "reuploadTimestamp": 1668581589,
+        "isBookmarkable": true,
+        "bookmarkData": null,
+        "aiType": 1
+      }
+    ]
+  }
+}

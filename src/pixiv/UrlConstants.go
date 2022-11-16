@@ -28,3 +28,4 @@ const TRENDING_TAGS = "v1/trending-tags/illust"
 const BOOK_DETAIL = "v2/novel/detail"
 const BOOK_CONTENT = "webview/v2/novel" // return html, need parse to get content
 const WEB_BOOK_CONTENT = "/ajax/novel/" // return json, no need parse
+const WEB_BOOK_SERIES = "/ajax/novel/series_content/"

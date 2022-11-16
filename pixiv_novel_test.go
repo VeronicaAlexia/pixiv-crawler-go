@@ -28,6 +28,7 @@ func TestPixivNovel(t *testing.T) {
 	response, err := app.App.NovelDetail(novel_id)
 	if err != nil {
 		t.Error(err)
+
 	}
 	if chapter_content, ok := app.App.NovelContent(novel_id); ok == nil {
 		book_info := utils.MakeBookInfo(response)
