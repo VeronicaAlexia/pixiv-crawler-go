@@ -5,6 +5,7 @@ import (
 	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/config"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/file"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/input"
+	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/request"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/src/download"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/src/pixiv"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/utils"
@@ -41,7 +42,7 @@ func DownloaderSingly(illust_id string) {
 	}
 }
 
-func GET_USER_FOLLOWING(UserID int) {
+func ShellUserFollowing(UserID int) {
 	if UserID == 0 {
 		UserID = config.Vars.UserID
 	}
@@ -59,14 +60,14 @@ func GET_USER_FOLLOWING(UserID int) {
 	// 刷新屏幕
 }
 
-func ShellStars(user_id int, next_url string) {
+func ShellStarsImages(user_id int, next_url string) {
 	bookmarks, err := App.UserBookmarksIllust(user_id, next_url)
 	if err != nil {
 		fmt.Println("Request user bookmarks illust fail,please check network", err)
 	} else {
 		download.DownloadTask(bookmarks.Illusts, true)
 		if bookmarks.NextURL != "" {
-			ShellStars(user_id, bookmarks.NextURL)
+			ShellStarsImages(user_id, bookmarks.NextURL)
 		}
 	}
 }
@@ -103,5 +104,16 @@ func ShellAuthor(next_url string, author_id int) {
 		}
 	} else {
 		fmt.Println("Request author info fail,please check network", err)
+	}
+}
+
+func ShellLoginPixiv() {
+	if accessToken, err := request.ChromeDriverLogin(); err != nil {
+		fmt.Println("Login fail,please check network", err)
+	} else {
+		config.VarsFile.Vipers.Set("pixiv_refresh_token", accessToken.RefreshToken)
+		config.VarsFile.Vipers.Set("pixiv_token", accessToken.AccessToken)
+		config.VarsFile.Vipers.Set("PIXIV_USER_ID", accessToken.User.ID)
+		config.VarsFile.SaveConfig()
 	}
 }
