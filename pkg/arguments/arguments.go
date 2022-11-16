@@ -13,8 +13,9 @@ type Command struct {
 	Ranking   bool
 	Stars     bool
 	Login     bool
+	IsNovel   bool
 	AuthorID  int
-	Max       int
+	ThreadMax int
 	UserID    int
 }
 
@@ -49,7 +50,7 @@ var CommandLineFlag = []cli.Flag{
 		Name:        "m, max",
 		Value:       16,
 		Usage:       "input max thread number",
-		Destination: &CommandLines.Max,
+		Destination: &CommandLines.ThreadMax,
 	},
 	cli.BoolFlag{
 		Name:        "f, following",
@@ -75,5 +76,10 @@ var CommandLineFlag = []cli.Flag{
 		Name:        "l, login",
 		Usage:       "login pixiv account",
 		Destination: &CommandLines.Login,
+	},
+	cli.BoolFlag{
+		Name:        "n, novel",
+		Usage:       "download novel",
+		Destination: &CommandLines.IsNovel,
 	},
 }

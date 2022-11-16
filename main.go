@@ -32,7 +32,7 @@ func main() {
 	cli_app.Usage = "download image from pixiv "
 	cli_app.Flags = arguments.CommandLineFlag
 	cli_app.Action = func(c *cli.Context) {
-		config.Vars.ThreadMax = arguments.CommandLines.Max
+		config.Vars.ThreadMax = arguments.CommandLines.ThreadMax
 		shell(arguments.CommandLines, c)
 	}
 	if err := cli_app.Run(os.Args); err != nil {
@@ -40,14 +40,21 @@ func main() {
 	}
 }
 func shell(args arguments.Command, c *cli.Context) {
-	if args.IllustID != "" {
-		app.DownloaderSingly(args.IllustID)
+	if args.IllustID != "" || args.URL != "" {
+		var IllustID string
+		if args.IllustID != "" {
+			IllustID = args.IllustID
+		} else {
+			IllustID = utils.GetInt(args.URL)
+		}
+		if args.IsNovel {
+			app.ShellNovel(IllustID)
+		} else {
+			app.DownloaderSingly(IllustID)
+		}
 
 	} else if args.AuthorID != 0 {
 		app.ShellAuthor("", args.AuthorID)
-
-	} else if args.URL != "" {
-		app.DownloaderSingly(utils.GetInt(args.URL))
 
 	} else if args.Following {
 		app.ShellUserFollowing(args.UserID)
