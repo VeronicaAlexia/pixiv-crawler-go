@@ -21,22 +21,23 @@ func (a *AppPixivAPI) NovelDetail(novel_id string) (*pixivstruct.NovelDetail, er
 	}
 }
 
-func (a *AppPixivAPI) NovelContent(novel_id string) (map[string]string, error) {
+func (a *AppPixivAPI) NovelContent(novel_id string) (string, error) {
 	response := request.Get(WEB_BASE+WEB_BOOK_CONTENT+novel_id, nil).Json(&pixivstruct.NovelContent{}).(*pixivstruct.NovelContent)
 	if response.Error {
-		return nil, errors.New(response.Message)
+		return "", errors.New(response.Message)
 	}
-	return map[string]string{
-		"novel_id":     response.Body.ID,
-		"author_id":    response.Body.UserID,
-		"book_name":    response.Body.Title,
-		"cover_url":    response.Body.CoverURL,
-		"description":  response.Body.Description,
-		"content_text": response.Body.Content,
-		"author_namer": response.Body.UserName,
-		"create_date":  response.Body.CreateDate.Format("2006-01-02 15:04:05"),
-		"update_date":  response.Body.UploadDate.Format("2006-01-02 15:04:05"),
-	}, nil
+	//return map[string]string{
+	//	"novel_id":     response.Body.ID,
+	//	"author_id":    response.Body.UserID,
+	//	"book_name":    response.Body.Title,
+	//	"cover_url":    response.Body.CoverURL,
+	//	"description":  response.Body.Description,
+	//	"content_text": response.Body.Content,
+	//	"author_namer": response.Body.UserName,
+	//	"create_date":  response.Body.CreateDate.Format("2006-01-02 15:04:05"),
+	//	"update_date":  response.Body.UploadDate.Format("2006-01-02 15:04:05"),
+	//}, nil
+	return response.Body.Content, nil
 }
 func (a *AppPixivAPI) AppNovelContent(novel_id string) string {
 	response := request.Get(API_BASE+BOOK_CONTENT, map[string]string{"id": novel_id}).Content()

@@ -9,6 +9,7 @@ import (
 	"github.com/VeronicaAlexia/pixiv-crawler-go/src/download"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/src/pixiv"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/utils"
+	"path"
 )
 
 var App = pixiv.NewApp()
@@ -124,21 +125,9 @@ func ShellNovel(novel_id string) {
 	if err != nil {
 		fmt.Println("Request novel fail,please check network", err)
 	}
-	if chapter_content, ok := App.NovelContent(novel_id); ok == nil {
-		book_info := "title: " + response.Novel.Title + "\n"
-		book_info += "author: " + chapter_content["author_namer"] + "\n"
-		book_info += "novel_id: " + chapter_content["novel_id"] + "\n"
-		book_info += "update: " + chapter_content["update_date"] + "\n"
-		book_info += "intro: " + chapter_content["description"] + "\n"
-		book_info += "tags: "
-		for index, tag := range response.Novel.Tags {
-			book_info += tag.Name
-			if index != 0 {
-				book_info += ", "
-			}
-		}
-		file_path := "novel/" + response.Novel.Title + ".txt"
-		file.Open(file_path, "w", book_info+"\n\n"+chapter_content["content_text"])
+	if chapter_content, ok := App.NovelContent(novel_id); ok == nil && chapter_content != "" {
+		book_info := utils.MakeBookInfo(response)
+		file.Open(path.Join("novel", response.Novel.Title+".txt"), "w", book_info+"\n\n"+chapter_content)
 	} else {
 		fmt.Println("Request novel content fail,please check network", err)
 	}

@@ -4,33 +4,25 @@ import (
 	"fmt"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/config"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/file"
-	"github.com/VeronicaAlexia/pixiv-crawler-go/pkg/request"
 	"github.com/VeronicaAlexia/pixiv-crawler-go/src/app"
+	"github.com/VeronicaAlexia/pixiv-crawler-go/utils"
+	"path"
 	"testing"
 )
 
-func init_test() {
+func init() {
 	config.VarsConfigInit()
 	if config.Vars.PixivRefreshToken == "" {
-		if accessToken, err := request.ChromeDriverLogin(); err != nil {
-			panic(err)
-		} else {
-			config.VarsFile.Vipers.Set("pixiv_refresh_token", accessToken.RefreshToken)
-			config.VarsFile.Vipers.Set("pixiv_token", accessToken.AccessToken)
-			config.VarsFile.Vipers.Set("PIXIV_USER_ID", accessToken.User.ID)
-			config.VarsFile.SaveConfig()
-		}
+		app.ShellLoginPixiv()
+	}
+	if res, err := app.App.UserDetail(config.Vars.UserID); err != nil {
+		panic("UserDetail error: " + err.Error())
 	} else {
-		if res, err := app.App.UserDetail(config.Vars.UserID); err != nil {
-			panic(err)
-		} else {
-			fmt.Println("account: ", res.User.Name, "\tid: ", res.User.ID)
-		}
+		fmt.Println("account: ", res.User.Name, "\tid: ", res.User.ID)
 	}
 }
 
 func TestPixivNovel(t *testing.T) {
-	init_test()
 	novel_id := "18729784"
 	file.NewFile("novel")
 	response, err := app.App.NovelDetail(novel_id)
@@ -38,20 +30,9 @@ func TestPixivNovel(t *testing.T) {
 		t.Error(err)
 	}
 	if chapter_content, ok := app.App.NovelContent(novel_id); ok == nil {
-		book_info := "title: " + response.Novel.Title + "\n"
-		book_info += "author: " + chapter_content["author_namer"] + "\n"
-		book_info += "novel_id: " + chapter_content["novel_id"] + "\n"
-		book_info += "update: " + chapter_content["update_date"] + "\n"
-		book_info += "intro: " + chapter_content["description"] + "\n"
-		book_info += "tags: "
-		for index, tag := range response.Novel.Tags {
-			book_info += tag.Name
-			if index != 0 {
-				book_info += ", "
-			}
-		}
-		file_path := "novel/" + response.Novel.Title + ".txt"
-		file.Open(file_path, "w", book_info+"\n\n"+chapter_content["content_text"])
+		book_info := utils.MakeBookInfo(response)
+		file.Open(path.Join("novel", response.Novel.Title+".txt"), "w", book_info+"\n\n"+chapter_content)
+
 	} else {
 		t.Error(ok)
 	}
